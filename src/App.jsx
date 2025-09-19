@@ -14,12 +14,42 @@ function App() {
   );
   const navigate = useNavigate();
 
-  // ✅ Load user from localStorage on refresh
+  
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      setUser({ token }); // In real app, decode JWT for user info
+      setUser({ token }); 
     }
+  }, []);
+
+  
+  useEffect(() => {
+    (async () => {
+      const params = new URLSearchParams(window.location.search);
+      const collectId =
+        params.get("EdvironCollectRequestId") ||
+        params.get("collect_request_id") ||
+        null;
+
+      if (!collectId) return;
+
+      try {
+        const res = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/payments/check-status/${collectId}`
+        );
+        const data = await res.json();
+        console.log("🔄 Auto-synced payment after redirect:", data);
+
+        
+        alert("Payment status synced: " + (data?.updated?.status || "N/A"));
+
+        // Clean the URL
+        const newUrl = window.location.origin + window.location.pathname;
+        window.history.replaceState({}, document.title, newUrl);
+      } catch (err) {
+        console.error("Auto check-status failed:", err);
+      }
+    })();
   }, []);
 
   // ✅ Tailwind v4 dark mode toggle via `.dark` class
