@@ -5,7 +5,7 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [limit] = useState(5);
-  const [sort, setSort] = useState("createdAt");
+  const [sort, setSort] = useState("payment_time"); // ✅ default newest first
   const [order, setOrder] = useState("desc");
   const [totalPages, setTotalPages] = useState(1);
   const token = localStorage.getItem("token");
@@ -68,7 +68,7 @@ function Dashboard() {
           onChange={(e) => setSort(e.target.value)}
           className="border p-2 rounded dark:bg-gray-800 dark:border-gray-600 dark:text-gray-100"
         >
-          <option value="createdAt">Created At</option>
+          <option value="payment_time">Payment Time</option>
           <option value="status">Status</option>
           <option value="order_amount">Order Amount</option>
         </select>
@@ -91,7 +91,7 @@ function Dashboard() {
             <th className="py-2 px-4 border dark:border-gray-600">Order Amount</th>
             <th className="py-2 px-4 border dark:border-gray-600">Status</th>
             <th className="py-2 px-4 border dark:border-gray-600">Custom Order ID</th>
-            <th className="py-2 px-4 border dark:border-gray-600">Created At</th>
+            <th className="py-2 px-4 border dark:border-gray-600">Time</th>
           </tr>
         </thead>
         <tbody>
@@ -116,8 +116,7 @@ function Dashboard() {
                       ? "text-green-600 dark:text-green-400"
                       : txn.status === "pending"
                       ? "text-yellow-600 dark:text-yellow-400"
-                      
-                      : "text-green-600 dark:text-green-400"
+                      : "text-red-600 dark:text-red-400"
                   }`}
                 >
                   {txn.status}
@@ -126,7 +125,11 @@ function Dashboard() {
                   {txn.custom_order_id}
                 </td>
                 <td className="py-2 px-4 text-gray-800 dark:text-gray-200">
-                  {txn.createdAt ? new Date(txn.createdAt).toLocaleString() : "-"}
+                  {txn.payment_time
+                    ? new Date(txn.payment_time).toLocaleString()
+                    : txn.createdAt
+                    ? new Date(txn.createdAt).toLocaleString()
+                    : "-"}
                 </td>
               </tr>
             ))
