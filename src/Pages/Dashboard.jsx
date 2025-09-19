@@ -112,9 +112,9 @@ function Dashboard() {
                 </td>
                 <td
                   className={`py-2 px-4 font-semibold ${
-                    txn.status === "success"
+                    txn.status === "success" || txn.status === "SUCCESS"
                       ? "text-green-600 dark:text-green-400"
-                      : txn.status === "pending"
+                      : txn.status === "pending" || txn.status === "PENDING"
                       ? "text-yellow-600 dark:text-yellow-400"
                       : "text-red-600 dark:text-red-400"
                   }`}
